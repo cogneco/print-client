@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ES3",
+		"module": "commonjs",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"out": "build/client.js",
+		"sourceMap": true,
+		"sourceRoot": "../source"
+	},
+	"files": [
+		"source/client.ts",
+		"source/pullrequest/PRList.ts",
+		"source/pullrequest/Pullrequest.ts"
+	]
+}

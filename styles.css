@@ -1,0 +1,24 @@
+body > main {
+	width: 100%;
+}
+body > main > section {
+	width: 50%;
+	box-sizing: border-box;
+	padding: 0;
+}
+body > main > section:first-of-type {
+	float: left;
+}
+body > main > section:last-of-type {
+	float: right;
+}
+body > main > section > article > main > div,
+body > main > section > article > main {
+	clear: both;
+}
+body > main > section > article > main > div > * {
+	float: left;
+	padding-right: 10px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
