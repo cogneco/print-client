@@ -80,6 +80,6 @@ module PrintClient {
 		xhttp.send();
 	}
 
-	loadXMLDoc("/client/json")
-	setInterval(function() { loadXMLDoc("/client/json") }, 5000);
+	loadXMLDoc("/print-client/json")
+	setInterval(function() { loadXMLDoc("/print-client/json") }, 5000);
 }
