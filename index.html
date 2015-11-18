@@ -8,8 +8,8 @@
 	</head>
 	<body>
 		<main>
-			<section id="kean"><h1>Kean</h1></section>
-			<section id="vidproc"><h1>Vidproc</h1></section>
+			<select id="repo-select" onchange="PrintClient.Client.loadRepoPRs(value)"></select>
+			<section id="pr-container"></section>
 		</main>
 		<script src="/print-client/build/client.js"></script>
 	</body>

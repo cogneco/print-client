@@ -10,8 +10,9 @@
 		"sourceRoot": "../source"
 	},
 	"files": [
-		"source/client.ts",
-		"source/pullrequest/PRList.ts",
-		"source/pullrequest/Pullrequest.ts"
+		"source/Client.ts",
+		"source/HtmlBuilder.ts",
+		"source/Ajax.ts",
+		"source/printapi/PullRequest.ts"
 	]
 }

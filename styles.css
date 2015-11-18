@@ -1,24 +1,39 @@
+body {
+	background-color: #EEEEEC;
+}
 body > main {
 	width: 100%;
+	max-width: 50em;
+	margin-left: auto;
+	margin-right: auto;
 }
-body > main > section {
-	width: 50%;
-	box-sizing: border-box;
-	padding: 0;
-}
-body > main > section:first-of-type {
-	float: left;
-}
-body > main > section:last-of-type {
+body > main > select {
 	float: right;
 }
-body > main > section > article > main > div,
-body > main > section > article > main {
+body > main > section {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0;
 	clear: both;
 }
-body > main > section > article > main > div > * {
-	float: left;
-	padding-right: 10px;
-	margin-top: 2px;
-	margin-bottom: 2px;
+body > main > section > h1 {
+	text-align: center;
+	font-size: 2em;
+}
+body > main > section > article {
+	background-color: #F3F3F2;
+	border: 1px solid #CCCCCC;
+	padding: 0.5em;
+	margin: 0.5em;
+}
+body > main > section > article > main > a > h2 {
+	font-size: 1em;
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+	text-decoration: none;
+	color: black;
 }
