@@ -4,23 +4,25 @@
 
 module PrintClient {
 	var intervalHandle: number;
+	var pollInterval = 20000;
+	var lastDataRetrival: string;
 	export class Client {
 		static loadPR(event: Event, element: Element) {
 			event.preventDefault();
 			event.stopPropagation();
-			HtmlBuilder.clearElement("pr-container");
+			HtmlBuilder.clearElementById("pr-container");
 			clearInterval(intervalHandle);
 			HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("h1", element.firstElementChild.textContent));
 			Ajax.loadXMLDoc(element.getAttribute("href"), "GET", Client.loadPRCallback, "json");
-			intervalHandle = setInterval(() => { Ajax.loadXMLDoc(element.getAttribute("href"), "GET", Client.loadPRCallback, "json"); }, 5000);
+			intervalHandle = setInterval(() => { Ajax.loadXMLDoc(element.getAttribute("href"), "GET", Client.loadPRCallback, "json"); }, pollInterval);
 		}
 		static loadRepoPRs(value: string) {
-			PrintClient.HtmlBuilder.clearElement("pr-container");
+			PrintClient.HtmlBuilder.clearElementById("pr-container");
 			clearInterval(intervalHandle);
 			if (value != "none") {
 				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("h1", value));
 				Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json");
-				intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json"); }, 5000);
+				intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json"); }, pollInterval);
 			}
 		}
 		static loadReposCallback(event: any) {
@@ -33,16 +35,18 @@ module PrintClient {
 		static loadPRListCallback(event: any) {
 			var pullrequests = <PrintApi.PullRequest[]>event.target.response;
 			pullrequests.forEach(function(pr) {
-				if (!HtmlBuilder.updatePRBox(pr, false)) {
-					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pr, false));
+				if (!HtmlBuilder.updatePRBox(pr, true)) {
+					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pr, true));
 				}
 			});
+			lastDataRetrival = event.target.getResponseHeader("Date");
 		}
 		static loadPRCallback(event: any) {
 			var pullrequest = <PrintApi.PullRequest>event.target.response;
-			if (!HtmlBuilder.updatePRBox(pullrequest, true)) {
-				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pullrequest, true));
+			if (!HtmlBuilder.updatePRBox(pullrequest, false)) {
+				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pullrequest, false));
 			}
+			lastDataRetrival = event.target.getResponseHeader("Date");
 		}
 	}
 }

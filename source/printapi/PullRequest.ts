@@ -1,7 +1,6 @@
 module PrintClient.PrintApi {
 	export class PullRequest {
 		id: string;
-		repository: string;
 		number: number;
 		title: string;
 		description: string;
@@ -9,5 +8,6 @@ module PrintClient.PrintApi {
 		updatedAt: string;
 		url: string;
 		diffUrl: string;
+		repositoryName: string;
 	}
 }

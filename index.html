@@ -7,10 +7,8 @@
 		<link href="/print-client/styles.css" rel="stylesheet"></link>
 	</head>
 	<body>
-		<main>
-			<select id="repo-select" onchange="PrintClient.Client.loadRepoPRs(value)"></select>
-			<section id="pr-container"></section>
-		</main>
+		<header><section><select id="repo-select" onchange="PrintClient.Client.loadRepoPRs(value)"></select></section></header>
+		<main><section id="pr-container"></section></main>
 		<script src="/print-client/build/client.js"></script>
 	</body>
 </html>
