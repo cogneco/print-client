@@ -5,7 +5,7 @@
 module PrintClient {
 	var intervalHandle: number;
 	var pollInterval = 20000;
-	var lastDataRetrival: string;
+	var lastEtag: string;
 	export class Client {
 		static loadPR(event: Event, element: Element) {
 			event.preventDefault();
@@ -22,15 +22,20 @@ module PrintClient {
 			if (value != "none") {
 				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("h1", value));
 				Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json");
-				intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json"); }, pollInterval);
+				intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", Client.loadPRListCallback, "json", lastEtag); }, pollInterval);
 			}
 		}
 		static loadReposCallback(event: any) {
 			var repos = <string[]>event.target.response;
-			HtmlBuilder.appendElementById("repo-select", HtmlBuilder.createElement("option", "Choose repository", "value", "none"));
-			repos.forEach(function(repo) {
-				HtmlBuilder.appendElementById("repo-select", HtmlBuilder.createElement("option", repo, "value", repo));
-			});
+			/*HtmlBuilder.appendElementById("repo-select", HtmlBuilder.createElement("option", "Choose repository", "value", "none"));*/
+			for (var i = 0; i < repos.length; i++) {
+				var option = HtmlBuilder.createElement("option", repos[i], "value", repos[i]);
+				if (i == 0) {
+					option.setAttribute("selected", "");
+					Client.loadRepoPRs(repos[i]);
+				}
+				HtmlBuilder.appendElementById("repo-select", option);					
+			}
 		}
 		static loadPRListCallback(event: any) {
 			var pullrequests = <PrintApi.PullRequest[]>event.target.response;
@@ -39,14 +44,13 @@ module PrintClient {
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pr, true));
 				}
 			});
-			lastDataRetrival = event.target.getResponseHeader("Date");
+			lastEtag = event.target.getResponseHeader("etag");
 		}
 		static loadPRCallback(event: any) {
 			var pullrequest = <PrintApi.PullRequest>event.target.response;
 			if (!HtmlBuilder.updatePRBox(pullrequest, false)) {
 				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pullrequest, false));
 			}
-			lastDataRetrival = event.target.getResponseHeader("Date");
 		}
 	}
 }
