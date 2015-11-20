@@ -4,8 +4,9 @@
 
 module PrintClient {
 	var intervalHandle: number;
-	var pollInterval = 20000;
+	var pollInterval = 60000;
 	var lastEtag: string;
+	var currentPRIDs: string[] = [];
 	export class Client {
 		static loadPR(event: Event, element: Element) {
 			event.preventDefault();
@@ -39,9 +40,20 @@ module PrintClient {
 		}
 		static loadPRListCallback(event: any) {
 			var pullrequests = <PrintApi.PullRequest[]>event.target.response;
-			pullrequests.forEach(function(pr) {
+			var receivedPRs: string[] = [];
+			pullrequests.forEach((pr) => {
+				receivedPRs.push(pr.id);
 				if (!HtmlBuilder.updatePRBox(pr, true)) {
+					currentPRIDs.push(pr.id);
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pr, true));
+				}
+			});
+			currentPRIDs.forEach((id) => {
+				if (receivedPRs.indexOf(id) < 0) {
+					HtmlBuilder.removeElementById(id);
+					currentPRIDs = currentPRIDs.filter((filterID) => {
+						return filterID != id; 
+					});
 				}
 			});
 			lastEtag = event.target.getResponseHeader("etag");

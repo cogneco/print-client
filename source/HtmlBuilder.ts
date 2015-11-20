@@ -13,6 +13,10 @@ module PrintClient {
 		static appendElementById(id: string, element: Element) {
 			document.getElementById(id).appendChild(element);
 		}
+		static removeElementById(id: string) {
+			var element = document.getElementById(id);
+			element.parentNode.removeChild(element);			
+		}
 		static createPRBox(pr: PrintApi.PullRequest, listView: boolean) {
 			var container = HtmlBuilder.createElement("article", "", "id", pr.id);
 			var content: Element;
