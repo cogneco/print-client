@@ -49,11 +49,29 @@ module PrintClient {
 			title.appendChild(HtmlBuilder.createElement("h2", pr.title + " #" + String(pr.number)));
 			main.appendChild(title);
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
+			var passed = true;
+			pr.executionResults.forEach((result) => {
+				if (result.result != "OK")
+					passed = false;
+			});
+			if (passed)
+				main.appendChild(HtmlBuilder.createElement("span", "", "class", "octicon octicon-check"));
+			else
+				main.appendChild(HtmlBuilder.createElement("span", "", "class", "octicon octicon-x"));
 			return main;
 		}
 		static buildPRBox(pr: PrintApi.PullRequest) {
 			var main = HtmlBuilder.createElement("main");
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
+			pr.executionResults.forEach((result) => {
+				main.appendChild(HtmlBuilder.createElement("p", result.task));
+				main.appendChild(HtmlBuilder.createElement("p", result.result));
+				if (result.result == "OK")
+					main.appendChild(HtmlBuilder.createElement("span", "", "class", "octicon octicon-check"));
+				else
+					main.appendChild(HtmlBuilder.createElement("span", "", "class", "octicon octicon-x"));
+				
+			});
 			return main;
 		}
 	}

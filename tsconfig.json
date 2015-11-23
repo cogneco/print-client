@@ -13,6 +13,7 @@
 		"source/Client.ts",
 		"source/HtmlBuilder.ts",
 		"source/Ajax.ts",
-		"source/printapi/PullRequest.ts"
+		"source/printapi/PullRequest.ts",
+		"source/printapi/ExecutionResult.ts"
 	]
 }
