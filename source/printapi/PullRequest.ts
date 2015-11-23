@@ -1,3 +1,5 @@
+/// <reference path="ExecutionResult" />
+
 module PrintClient.PrintApi {
 	export class PullRequest {
 		id: string;
@@ -9,5 +11,6 @@ module PrintClient.PrintApi {
 		url: string;
 		diffUrl: string;
 		repositoryName: string;
+		executionResults: ExecutionResult[] = [];
 	}
 }

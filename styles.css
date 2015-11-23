@@ -1,5 +1,5 @@
 body {
-	background-color: #EEEEEC;
+	background-color: #FAFAFA;
 	color: #2E3436;
 	margin: 0;
 	padding: 0;
@@ -11,8 +11,13 @@ body > header {
 	padding: 0.5em;
 }
 body > header {
-	background-color: #062747;
-	color: #EEEEEC;
+	background-color: #F5F5F5;
+	color: #333333;
+	border-bottom: 1px solid #E5E5E5;
+}
+body header > section > * {
+	display: inline-block;
+	margin-right: 5px;
 }
 body > main > section,
 body > header > section {
@@ -23,28 +28,46 @@ body > header > section {
 	box-sizing: border-box;
 	padding: 0;
 }
-body > header > section > select {
-	float: right;
-}
-body > header > section:after {
-	content: "";
-	visibility: hidden;
-	display: block;
-	height: 0;
-	clear: both;
-}
 body > main > section > h1 {
-	text-align: center;
 	font-size: 2em;
+}
+body > main > section > article:first-of-type {
+	border-top: 1px solid #CCCCCC;
 }
 body > main > section > article {
 	background-color: #F3F3F2;
-	border: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
 	padding: 0.5em;
-	margin: 0.5em;
 }
 body > main > section > article > main > a > h2 {
-	font-size: 1em;
+	font-size: 15px;
+	display: inline-block;
+	margin-right: 10px;
+	margin-bottom: 0;
+	margin-top: 5px;
+}
+body > main > section > article > main > span {
+	width: 16px;
+	height: 18px;
+	border-radius: 50%;
+	padding-left: 4px;
+	padding-top: 2px;
+	color: white;
+}
+body > main > section > article > main > p {
+	font-size: 14px;
+	margin-bottom: 0;
+}
+.octicon-x {
+	background-color: #BD2C00;
+}
+.octicon-check {
+	background-color: #6CC644;
+}
+.octicon-server {
+	background-color: #CEA61B;
 }
 a,
 a:link,
