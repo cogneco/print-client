@@ -10,7 +10,7 @@ module PrintClient {
 		private pullrequestIdList: string[] = [];		
 		constructor() {
 			this.pollInterval = 60000;
-			Ajax.loadXMLDoc("/print", "GET", this.loadReposCallback, "json");
+			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
 		loadPR(event: Event, element: Element) {
 			event.preventDefault();
