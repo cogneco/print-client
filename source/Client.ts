@@ -25,7 +25,7 @@ module PrintClient {
 			returnButton.setAttribute("onclick", "printClient.loadRepoPRs(\"" + href.split("/")[2] + "\")");
 			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
 			Ajax.loadXMLDoc(href, "GET", this.loadPRCallback, "json");
-			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc(href, "GET", this.loadPRCallback, "json"); }, this.pollInterval);
+			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc(href, "GET", this.loadPRCallback, "json", this.lastEtag); }, this.pollInterval);
 		}
 		loadRepoPRs(value: string) {
 			PrintClient.HtmlBuilder.clearElementById("pr-container");
@@ -75,6 +75,7 @@ module PrintClient {
 			if (!HtmlBuilder.updatePRBox(pullrequest, false)) {
 				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pullrequest, false));
 			}
+			printClient.lastEtag = event.target.getResponseHeader("etag");
 		}
 	}
 }
