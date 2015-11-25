@@ -41,6 +41,8 @@ module PrintClient {
 		}
 		static buildPRBox(pr: PrintApi.Pullrequest) {
 			var main = HtmlBuilder.createElement("main");
+			main.appendChild(HtmlBuilder.createElement("h2", pr.title + " #" + String(pr.number)));
+			main.appendChild(HtmlBuilder.createElement("p", "Created by " + pr.user.username));
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
 			main.appendChild(HtmlBuilder.createElement("p", "Execution status:"));
 			pr.executionResults.forEach((result) => {

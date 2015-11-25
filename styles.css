@@ -41,7 +41,7 @@ body > main > section > article {
 	border-left: 1px solid #CCCCCC;
 	padding: 0.5em;
 }
-body > main > section > article > main > a > h2 {
+body > main > section > article > main h2 {
 	font-size: 15px;
 	display: inline-block;
 	margin-right: 10px;
