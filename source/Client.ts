@@ -1,6 +1,7 @@
-/// <reference path="printapi/PullRequest" />
+/// <reference path="printapi/Pullrequest" />
 /// <reference path="Ajax" />
 /// <reference path="HtmlBuilder" />
+/// <reference path="PullrequestBuilder" />
 
 module PrintClient {
 	export class Client {
@@ -17,7 +18,7 @@ module PrintClient {
 			event.stopPropagation();
 			HtmlBuilder.clearElementById("pr-container");
 			clearInterval(this.intervalHandle);
-			HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("h1", element.firstElementChild.textContent));
+			/*HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("h1", element.firstElementChild.textContent));*/
 			var returnButton = HtmlBuilder.createElement("input", "", "type", "button");
 			var href = element.getAttribute("href");
 			returnButton.setAttribute("id", "return-button");
@@ -51,13 +52,13 @@ module PrintClient {
 			}
 		}
 		loadPRListCallback(event: any) {
-			var pullrequests = <PrintApi.PullRequest[]>event.target.response;
+			var pullrequests = <PrintApi.Pullrequest[]>event.target.response;
 			var receivedPRs: string[] = [];
 			pullrequests.forEach((pr) => {
 				receivedPRs.push(pr.id);
-				if (!HtmlBuilder.updatePRBox(pr, true)) {
+				if (!PullrequestBuilder.updatePRBox(pr, true)) {
 					printClient.pullrequestIdList.push(pr.id);
-					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pr, true));
+					HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pr, true));
 				}
 			});
 			printClient.pullrequestIdList.forEach((id) => {
@@ -71,9 +72,9 @@ module PrintClient {
 			printClient.lastEtag = event.target.getResponseHeader("etag");
 		}
 		loadPRCallback(event: any) {
-			var pullrequest = <PrintApi.PullRequest>event.target.response;
-			if (!HtmlBuilder.updatePRBox(pullrequest, false)) {
-				HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createPRBox(pullrequest, false));
+			var pullrequest = <PrintApi.Pullrequest>event.target.response;
+			if (!PullrequestBuilder.updatePRBox(pullrequest, false)) {
+				HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pullrequest, false));
 			}
 			printClient.lastEtag = event.target.getResponseHeader("etag");
 		}

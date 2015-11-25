@@ -13,7 +13,11 @@
 		"source/Client.ts",
 		"source/HtmlBuilder.ts",
 		"source/Ajax.ts",
-		"source/printapi/PullRequest.ts",
-		"source/printapi/ExecutionResult.ts"
+		"source/PullrequestBuilder.ts",
+		"source/printapi/Pullrequest.ts",
+		"source/printapi/ExecutionResult.ts",
+		"source/printapi/Fork.ts",
+		"source/printapi/Repository.ts",
+		"source/printapi/User.ts"
 	]
 }

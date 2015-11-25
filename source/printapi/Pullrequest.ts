@@ -1,16 +1,23 @@
 /// <reference path="ExecutionResult" />
+/// <reference path="User" />
+/// <reference path="Fork" />
 
 module PrintClient.PrintApi {
-	export class PullRequest {
+	export class Pullrequest {
 		id: string;
 		number: number;
 		title: string;
 		description: string;
 		createdAt: string;
 		updatedAt: string;
+		statusesUrl: string;
+		commitCount: number;
 		url: string;
 		diffUrl: string;
 		repositoryName: string;
+		user: User;
+		head: Fork;
+		base: Fork;
 		executionResults: ExecutionResult[] = [];
 	}
 }
