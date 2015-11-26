@@ -77,3 +77,9 @@ a:active {
 	text-decoration: none;
 	color: #2E3436;
 }
+.error {
+	color: red;
+	padding: 0.5em;
+	background-color: #F3F3F2;
+	border: 1px solid #CCCCCC;
+}

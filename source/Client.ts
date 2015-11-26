@@ -10,7 +10,7 @@ module PrintClient {
 		private lastEtag: string;
 		private pullrequestIdList: string[] = [];		
 		constructor() {
-			this.pollInterval = 60000;
+			this.pollInterval = 3000;
 			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
 		loadPR(event: Event, element: Element) {
@@ -52,31 +52,43 @@ module PrintClient {
 			}
 		}
 		loadPRListCallback(event: any) {
-			var pullrequests = <PrintApi.Pullrequest[]>event.target.response;
-			var receivedPRs: string[] = [];
-			pullrequests.forEach((pr) => {
-				receivedPRs.push(pr.id);
-				if (!PullrequestBuilder.updatePRBox(pr, true)) {
-					printClient.pullrequestIdList.push(pr.id);
-					HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pr, true));
-				}
-			});
-			printClient.pullrequestIdList.forEach((id) => {
-				if (receivedPRs.indexOf(id) < 0) {
-					HtmlBuilder.removeElementById(id);
-					printClient.pullrequestIdList = printClient.pullrequestIdList.filter((filterID) => {
-						return filterID != id; 
-					});
-				}
-			});
-			printClient.lastEtag = event.target.getResponseHeader("etag");
+			if (event.target.status == 200) {
+				var pullrequests = <PrintApi.Pullrequest[]>event.target.response;
+				var receivedPRs: string[] = [];
+				pullrequests.forEach((pr) => {
+					receivedPRs.push(pr.id);
+					if (!PullrequestBuilder.updatePRBox(pr, true)) {
+						printClient.pullrequestIdList.push(pr.id);
+						HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pr, true));
+					}
+				});
+				printClient.pullrequestIdList.forEach((id) => {
+					if (receivedPRs.indexOf(id) < 0) {
+						HtmlBuilder.removeElementById(id);
+						printClient.pullrequestIdList = printClient.pullrequestIdList.filter((filterID) => {
+							return filterID != id; 
+						});
+					}
+				});
+				printClient.lastEtag = event.target.getResponseHeader("etag");
+			}
+			else {
+				if (document.getElementsByClassName("error").length <= 0)
+					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
+			}
 		}
 		loadPRCallback(event: any) {
-			var pullrequest = <PrintApi.Pullrequest>event.target.response;
-			if (!PullrequestBuilder.updatePRBox(pullrequest, false)) {
-				HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pullrequest, false));
+			if (event.target.status == 200) {
+				var pullrequest = <PrintApi.Pullrequest>event.target.response;
+				if (!PullrequestBuilder.updatePRBox(pullrequest, false)) {
+					HtmlBuilder.appendElementById("pr-container", PullrequestBuilder.createPRBox(pullrequest, false));
+				}
+				printClient.lastEtag = event.target.getResponseHeader("etag");
 			}
-			printClient.lastEtag = event.target.getResponseHeader("etag");
+			else {
+				if (document.getElementsByClassName("error").length <= 0)
+					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
+			}
 		}
 	}
 }
