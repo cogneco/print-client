@@ -10,7 +10,7 @@ module PrintClient {
 		private lastEtag: string;
 		private pullrequestIdList: string[] = [];		
 		constructor() {
-			this.pollInterval = 3000;
+			this.pollInterval = 60000;
 			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
 		loadPR(event: Event, element: Element) {
