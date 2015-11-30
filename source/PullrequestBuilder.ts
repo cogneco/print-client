@@ -56,7 +56,7 @@ module PrintClient {
 			var icon = "octicon-server";
 			for (var i = 0; i < executionResults.length; i++) {
 				icon = "octicon-check";
-				if (executionResults[i].result != "OK") {
+				if (executionResults[i].result != "0") {
 					icon = "octicon-x";
 					i = executionResults.length;
 				}
@@ -65,7 +65,7 @@ module PrintClient {
 		}
 		static createStatusIcon(result: string) {
 			var icon = "octicon-check";
-			if (result != "OK")
+			if (result != "0")
 				icon = "octicon-x";
 			return HtmlBuilder.createElement("span", "", "class", "octicon " + icon);
 		}
