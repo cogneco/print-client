@@ -8,8 +8,10 @@ module PrintClient {
 		private intervalHandle: number;
 		private pollInterval: number;
 		private lastEtag: string;
-		private pullrequestIdList: string[] = [];		
+		private pullrequestIdList: string[] = [];
+		private localhost: boolean = false;	
 		constructor() {
+			Ajax.loadXMLDoc("/print/print-client/am-i-localhost", "GET", this.localhostCallback, "json");
 			this.pollInterval = 60000;
 			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
@@ -24,6 +26,18 @@ module PrintClient {
 			returnButton.setAttribute("id", "return-button");
 			returnButton.setAttribute("value", "Return to list");
 			returnButton.setAttribute("onclick", "printClient.loadRepoPRs(\"" + href.split("/")[2] + "\")");
+			if (this.localhost) {
+				var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+				exploreButton.setAttribute("id", "explore-terminal-button");
+				exploreButton.setAttribute("value", "Open in terminal");
+				exploreButton.setAttribute("onclick", "printClient.explorePR(\"terminal\",\"" + href.split("/")[2] + "\",\"" + href.split("/")[4] + "\")");
+				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+				exploreButton.setAttribute("id", "explore-nautilus-button");
+				exploreButton.setAttribute("value", "Open in nautilus");
+				exploreButton.setAttribute("onclick", "printClient.explorePR(\"nautilus\",\"" + href.split("/")[2] + "\",\"" + href.split("/")[4] + "\")");
+				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+			}
 			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
 			Ajax.loadXMLDoc(href, "GET", this.loadPRCallback, "json");
 			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc(href, "GET", this.loadPRCallback, "json", this.lastEtag); }, this.pollInterval);
@@ -31,6 +45,8 @@ module PrintClient {
 		loadRepoPRs(value: string) {
 			PrintClient.HtmlBuilder.clearElementById("pr-container");
 			HtmlBuilder.removeElementById("return-button");
+			HtmlBuilder.removeElementById("explore-terminal-button");
+			HtmlBuilder.removeElementById("explore-nautilus-button");
 			this.pullrequestIdList = [];
 			clearInterval(this.intervalHandle);
 			if (value != "none") {
@@ -38,6 +54,9 @@ module PrintClient {
 				Ajax.loadXMLDoc("/print/" + value, "GET", this.loadPRListCallback, "json");
 				this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", this.loadPRListCallback, "json", this.lastEtag); }, this.pollInterval);
 			}
+		}
+		explorePR(application: string, repo: string, pr: string) {
+			Ajax.loadXMLDoc("/print/explore/" + application + "/" + repo + "/" + pr, "GET");
 		}
 		loadReposCallback(event: any) {
 			var repos = <string[]>event.target.response;
@@ -89,6 +108,10 @@ module PrintClient {
 				if (document.getElementsByClassName("error").length <= 0)
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
 			}
+		}
+		localhostCallback(event: any) {
+			if (event.target.response.localhost == "yes")
+				printClient.localhost = true;
 		}
 	}
 }
