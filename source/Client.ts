@@ -9,7 +9,7 @@ module PrintClient {
 		private pollInterval: number;
 		private lastEtag: string;
 		private pullrequestIdList: string[] = [];
-		private localhost: boolean = false;	
+		private localhost: boolean = false;
 		constructor() {
 			Ajax.loadXMLDoc("/print/print-client/am-i-localhost", "GET", this.localhostCallback, "json");
 			this.pollInterval = 60000;
@@ -59,15 +59,17 @@ module PrintClient {
 			Ajax.loadXMLDoc("/print/explore/" + application + "/" + repo + "/" + pr, "GET");
 		}
 		loadReposCallback(event: any) {
-			var repos = <string[]>event.target.response;
-			/*HtmlBuilder.appendElementById("repo-select", HtmlBuilder.createElement("option", "Choose repository", "value", "none"));*/
-			for (var i = 0; i < repos.length; i++) {
-				var option = HtmlBuilder.createElement("option", repos[i], "value", repos[i]);
-				if (i == 0) {
-					option.setAttribute("selected", "");
-					printClient.loadRepoPRs(repos[i]);
+			if (event.target.status == 200) {
+				var repos = <string[]>event.target.response;
+				/*HtmlBuilder.appendElementById("repo-select", HtmlBuilder.createElement("option", "Choose repository", "value", "none"));*/
+				for (var i = 0; i < repos.length; i++) {
+					var option = HtmlBuilder.createElement("option", repos[i], "value", repos[i]);
+					if (i == 0) {
+						option.setAttribute("selected", "");
+						printClient.loadRepoPRs(repos[i]);
+					}
+					HtmlBuilder.appendElementById("repo-select", option);					
 				}
-				HtmlBuilder.appendElementById("repo-select", option);					
 			}
 		}
 		loadPRListCallback(event: any) {
@@ -91,7 +93,7 @@ module PrintClient {
 				});
 				printClient.lastEtag = event.target.getResponseHeader("etag");
 			}
-			else {
+			else if (event.target.status != 304) {
 				if (document.getElementsByClassName("error").length <= 0)
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
 			}
@@ -104,14 +106,24 @@ module PrintClient {
 				}
 				printClient.lastEtag = event.target.getResponseHeader("etag");
 			}
-			else {
+			else if (event.target.stauts != 304) {
 				if (document.getElementsByClassName("error").length <= 0)
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
 			}
 		}
 		localhostCallback(event: any) {
-			if (event.target.response.localhost == "yes")
-				printClient.localhost = true;
+			if (event.target.status == 200) {
+				if (event.target.response.localhost == "yes")
+					printClient.localhost = true;
+			}
+		}
+		toggleOutput(event: Event, element: HTMLElement) {
+			var outputElement = <HTMLElement>element.nextElementSibling;
+			if (outputElement.style.display == "none")
+				outputElement.style.display = "block";
+			else
+				outputElement.style.display = "none";
+			
 		}
 	}
 }

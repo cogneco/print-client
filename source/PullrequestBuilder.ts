@@ -46,9 +46,15 @@ module PrintClient {
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
 			main.appendChild(HtmlBuilder.createElement("p", "Execution status:"));
 			pr.executionResults.forEach((result) => {
-				main.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
-				main.appendChild(PullrequestBuilder.createStatusIcon(result.result));
-				main.appendChild(HtmlBuilder.createElement("br"));
+				var resultContainer = HtmlBuilder.createElement("div");
+				var taskHeader = HtmlBuilder.createElement("header", "", "onclick", "printClient.toggleOutput(event, this)"); 
+				taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
+				taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
+				resultContainer.appendChild(taskHeader);
+				var output = HtmlBuilder.createElement("p", result.output, "class", "output");
+				output.style.display = "none";
+				resultContainer.appendChild(output);
+				main.appendChild(resultContainer);
 			});
 			return main;
 		}
