@@ -48,7 +48,8 @@ body > main > section > article > main h2 {
 	margin-bottom: 0;
 	margin-top: 5px;
 }
-body > main > section > article > main > span {
+body > main > section > article > main > span,
+body > main > section > article > main > div > header > span {
 	width: 16px;
 	height: 18px;
 	border-radius: 50%;
@@ -56,9 +57,36 @@ body > main > section > article > main > span {
 	padding-top: 2px;
 	color: white;
 }
-body > main > section > article > main > p {
+body > main > section > article > main > p,
+body > main > section > article > main > div > header > p {
 	font-size: 14px;
 	margin-bottom: 0;
+}
+body > main > section > article > main > div {
+	border: 1px solid #999999;
+	margin-top: 0.5em;
+}
+body > main > section > article > main > div > header {
+	cursor: pointer;
+	margin-top: 0;
+}
+body > main > section > article > main > div > header > p {
+	margin-left: 0.5em;
+	margin-bottom: 0.8em;
+	margin-top: 0.8em;
+}
+body > main > section > article > main > div > p.output {
+	font-size: 13px;
+	white-space: pre-wrap;
+	background-color: #002B36;
+	color: #839496;
+	padding: 0.5em;
+	cursor: default;
+	margin-top: 0em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	margin-bottom: 0.5em;
+	font-family: Courier New, Courier, monospace
 }
 .octicon-x {
 	background-color: #BD2C00;
