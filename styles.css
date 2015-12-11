@@ -75,7 +75,7 @@ body > main > section > article > main > div > header > p {
 	margin-bottom: 0.8em;
 	margin-top: 0.8em;
 }
-body > main > section > article > main > div > p.output {
+body > main > section > article > main > div > details {
 	font-size: 13px;
 	white-space: pre-wrap;
 	background-color: #002B36;
