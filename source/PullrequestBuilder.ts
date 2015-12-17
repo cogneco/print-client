@@ -50,7 +50,7 @@ module PrintClient {
 				taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
 				taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
 				resultContainer.appendChild(taskHeader);
-				resultContainer.appendChild(HtmlBuilder.createElement("details", result.output, "style", "display:none;"));
+				resultContainer.appendChild(HtmlBuilder.createElement("details", result.output.replace(/\033\[[0-9;]*m/g, ""), "style", "display:none;"));
 				main.appendChild(resultContainer);
 			});
 			return main;
