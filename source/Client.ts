@@ -12,7 +12,7 @@ module PrintClient {
 		private localhost: boolean = false;
 		constructor() {
 			Ajax.loadXMLDoc("/print/print-client/am-i-localhost", "GET", this.localhostCallback, "json");
-			this.pollInterval = 60000;
+			this.pollInterval = 10000;
 			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
 		loadPR(repo: string, pr: string) {
@@ -33,6 +33,11 @@ module PrintClient {
 				exploreButton.setAttribute("value", "Open in nautilus");
 				exploreButton.setAttribute("onclick", "printClient.explorePR(\"nautilus\",\"" + repo + "\",\"" + pr + "\")");
 				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+				exploreButton.setAttribute("id", "flash-android-button");
+				exploreButton.setAttribute("value", "Flash Android");
+				exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
+				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
 			}
 			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
 			Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json");
@@ -43,6 +48,7 @@ module PrintClient {
 			HtmlBuilder.removeElementById("return-button");
 			HtmlBuilder.removeElementById("explore-terminal-button");
 			HtmlBuilder.removeElementById("explore-nautilus-button");
+			HtmlBuilder.removeElementById("flash-android-button");
 			this.pullrequestIdList = [];
 			clearInterval(this.intervalHandle);
 			if (value != "none") {
