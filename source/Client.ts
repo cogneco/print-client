@@ -22,6 +22,7 @@ module PrintClient {
 			returnButton.setAttribute("id", "return-button");
 			returnButton.setAttribute("value", "Return to list");
 			returnButton.setAttribute("onclick", "printClient.changeRepo(\"" + repo + "\")");
+			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
 			if (this.localhost) {
 				var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
 				exploreButton.setAttribute("id", "explore-terminal-button");
@@ -38,8 +39,12 @@ module PrintClient {
 				exploreButton.setAttribute("value", "Flash Android");
 				exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
 				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+				exploreButton.setAttribute("id", "run-tests-button");
+				exploreButton.setAttribute("value", "Run tests");
+				exploreButton.setAttribute("onclick", "printClient.explorePR(\"runtests\",\"" + repo + "\",\"" + pr + "\")");
+				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
 			}
-			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
 			Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json");
 			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json", this.lastEtag); }, this.pollInterval);
 		}
@@ -49,6 +54,7 @@ module PrintClient {
 			HtmlBuilder.removeElementById("explore-terminal-button");
 			HtmlBuilder.removeElementById("explore-nautilus-button");
 			HtmlBuilder.removeElementById("flash-android-button");
+			HtmlBuilder.removeElementById("run-tests-button");
 			this.pullrequestIdList = [];
 			clearInterval(this.intervalHandle);
 			if (value != "none") {
