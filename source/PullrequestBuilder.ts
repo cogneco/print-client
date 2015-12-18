@@ -33,7 +33,8 @@ module PrintClient {
 			var title = HtmlBuilder.createElement("a", "", "href", "/print/print-client/" + pr.repositoryName + "/pr/" + pr.id);
 			title.appendChild(HtmlBuilder.createElement("h2", pr.title + " #" + String(pr.number)));
 			main.appendChild(title);
-			main.appendChild(PullrequestBuilder.createStatusIconForList(pr.executionResults));
+			if (pr.executionResults.length > 0)
+				main.appendChild(PullrequestBuilder.createStatusIconForList(pr.executionResults, pr.allJobsComplete));
 			main.appendChild(HtmlBuilder.createElement("p", "Created by " + pr.user.username));
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
 			return main;
@@ -55,13 +56,15 @@ module PrintClient {
 			});
 			return main;
 		}
-		static createStatusIconForList(executionResults: PrintApi.ExecutionResult[]) {
+		static createStatusIconForList(executionResults: PrintApi.ExecutionResult[], allJobsComplete: string) {
 			var icon = "octicon-server";
-			for (var i = 0; i < executionResults.length; i++) {
-				icon = "octicon-check";
-				if (executionResults[i].result != "0") {
-					icon = "octicon-x";
-					i = executionResults.length;
+			if (allJobsComplete == "true") {
+				for (var i = 0; i < executionResults.length; i++) {
+					icon = "octicon-check";
+					if (executionResults[i].result != "0") {
+						icon = "octicon-x";
+						i = executionResults.length;
+					}
 				}
 			}
 			return HtmlBuilder.createElement("span", "", "class", "octicon " + icon);

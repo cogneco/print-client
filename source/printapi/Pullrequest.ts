@@ -19,5 +19,6 @@ module PrintClient.PrintApi {
 		head: Fork;
 		base: Fork;
 		executionResults: ExecutionResult[] = [];
+		allJobsComplete: string;
 	}
 }
