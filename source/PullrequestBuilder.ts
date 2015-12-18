@@ -17,13 +17,14 @@ module PrintClient {
 			var success: boolean = false;
 			var pr_container = document.getElementById(pr.id);
 			if (pr_container) {
-				pr_container.innerHTML = "";
-				var content: Element;
-				if (listView)
+				if (listView) {
+					pr_container.innerHTML = "";
+					var content: Element;
 					content = PullrequestBuilder.buildListViewPRBox(pr);
+					pr_container.appendChild(content);
+				}
 				else
-					content = PullrequestBuilder.buildPRBox(pr);
-				pr_container.appendChild(content);
+					PullrequestBuilder.updateSinglePRBox(pr);
 				success = true;
 			}
 			return success;
@@ -46,7 +47,7 @@ module PrintClient {
 			main.appendChild(HtmlBuilder.createElement("p", pr.description));
 			main.appendChild(HtmlBuilder.createElement("p", "Execution status:"));
 			pr.executionResults.forEach((result) => {
-				var resultContainer = HtmlBuilder.createElement("div");
+				var resultContainer = HtmlBuilder.createElement("div", "", "id", result.task + pr.id);
 				var taskHeader = HtmlBuilder.createElement("header", "", "onclick", "printClient.toggleOutput(event, this)");
 				taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
 				taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
@@ -55,6 +56,21 @@ module PrintClient {
 				main.appendChild(resultContainer);
 			});
 			return main;
+		}
+		static updateSinglePRBox(pr: PrintApi.Pullrequest) {
+			var main = document.getElementById(pr.id).firstElementChild;
+			pr.executionResults.forEach((result) => {
+				var executionResult = document.getElementById(result.task + pr.id);
+				if (!executionResult) {
+					var resultContainer = HtmlBuilder.createElement("div", "", "id", result.task + pr.id);
+					var taskHeader = HtmlBuilder.createElement("header", "", "onclick", "printClient.toggleOutput(event, this)");
+					taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
+					taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
+					resultContainer.appendChild(taskHeader);
+					resultContainer.appendChild(HtmlBuilder.createElement("details", result.output.replace(/\033\[[0-9;]*m/g, ""), "style", "display:none;"));
+					main.appendChild(resultContainer);
+				}
+			});
 		}
 		static createStatusIconForList(executionResults: PrintApi.ExecutionResult[], allJobsComplete: string) {
 			var icon = "octicon-server";
