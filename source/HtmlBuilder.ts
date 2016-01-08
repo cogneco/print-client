@@ -16,7 +16,7 @@ module PrintClient {
 		static removeElementById(id: string) {
 			var element = document.getElementById(id);
 			if (element)
-				element.parentNode.removeChild(element);			
+				element.parentNode.removeChild(element);
 		}
 	}
 }
