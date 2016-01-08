@@ -39,12 +39,12 @@ module PrintClient {
 				exploreButton.setAttribute("value", "Flash Android");
 				exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
 				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-				exploreButton.setAttribute("id", "run-tests-button");
-				exploreButton.setAttribute("value", "Run tests");
-				exploreButton.setAttribute("onclick", "printClient.explorePR(\"runtests\",\"" + repo + "\",\"" + pr + "\")");
-				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
 			}
+			var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+			exploreButton.setAttribute("id", "run-tests-button");
+			exploreButton.setAttribute("value", "Run tests");
+			exploreButton.setAttribute("onclick", "printClient.explorePR(\"runtests\",\"" + repo + "\",\"" + pr + "\")");
+			document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
 			Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json");
 			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json", this.lastEtag); }, this.pollInterval);
 		}
@@ -63,10 +63,18 @@ module PrintClient {
 			}
 		}
 		explorePR(application: string, repo: string, pr: string) {
-			Ajax.loadXMLDoc("/print/explore/" + application + "/" + repo + "/" + pr, "GET");
+			var callback: any = null;
+			if (application == "runtests")
+				callback = this.runTestsCallback;
+			Ajax.loadXMLDoc("/print/explore/" + application + "/" + repo + "/" + pr, "GET", callback);
 		}
 		changeRepo(value: string) {
 			window.location.assign("/print/print-client/" + value);
+		}
+		runTestsCallback(event: any) {
+			if (event.target.status == 200) {
+				PullrequestBuilder.clearExecutionResults();
+			}
 		}
 		loadReposCallback(event: any) {
 			if (event.target.status == 200) {

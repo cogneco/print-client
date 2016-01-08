@@ -59,17 +59,31 @@ module PrintClient {
 		}
 		static updateSinglePRBox(pr: PrintApi.Pullrequest) {
 			var main = document.getElementById(pr.id).firstElementChild;
-			pr.executionResults.forEach((result) => {
-				var executionResult = document.getElementById(result.task + pr.id);
-				if (!executionResult) {
-					var resultContainer = HtmlBuilder.createElement("div", "", "id", result.task + pr.id);
-					var taskHeader = HtmlBuilder.createElement("header", "", "onclick", "printClient.toggleOutput(event, this)");
-					taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
-					taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
-					resultContainer.appendChild(taskHeader);
-					resultContainer.appendChild(HtmlBuilder.createElement("details", result.output.replace(/\033\[[0-9;]*m/g, ""), "style", "display:none;"));
-					main.appendChild(resultContainer);
+			var currentlyDisplayResults = main.getElementsByTagName("DIV");
+			for (var i = currentlyDisplayResults.length-1; i >= 0; i--) {
+				var remove = true;
+				for (var j = 0; j < pr.executionResults.length; j++) {
+					if (currentlyDisplayResults[i].id == pr.executionResults[j].task + pr.id) {
+						remove = false;
+						j = pr.executionResults.length;
+					}
 				}
+				if (remove)
+					currentlyDisplayResults[i].parentNode.removeChild(currentlyDisplayResults[i]);
+			}
+			pr.executionResults.forEach((result) => {
+				var resultContainer = HtmlBuilder.createElement("div", "", "id", result.task + pr.id);
+				var taskHeader = HtmlBuilder.createElement("header", "", "onclick", "printClient.toggleOutput(event, this)");
+				taskHeader.appendChild(HtmlBuilder.createElement("p", result.task, "style", "display:inline-block;margin-right:10px;"));
+				taskHeader.appendChild(PullrequestBuilder.createStatusIcon(result.result));
+				resultContainer.appendChild(taskHeader);
+				resultContainer.appendChild(HtmlBuilder.createElement("details", result.output.replace(/\033\[[0-9;]*m/g, ""), "style", "display:none;"));
+
+				var executionResult = document.getElementById(result.task + pr.id);
+				if (!executionResult)
+					main.appendChild(resultContainer);
+				else if ((<HTMLElement>executionResult.getElementsByTagName("DETAILS")[0]).innerHTML != (<HTMLElement>resultContainer.getElementsByTagName("DETAILS")[0]).innerHTML)
+					executionResult.innerHTML = resultContainer.innerHTML;
 			});
 		}
 		static createStatusIconForList(executionResults: PrintApi.ExecutionResult[], allJobsComplete: string) {
@@ -90,6 +104,13 @@ module PrintClient {
 			if (result != "0")
 				icon = "octicon-x";
 			return HtmlBuilder.createElement("span", "", "class", "octicon " + icon);
+		}
+		static clearExecutionResults() {
+			var main = document.getElementById("pr-container").firstElementChild.firstElementChild;
+			var executionResults = main.getElementsByTagName("DIV");
+			for (var i = executionResults.length-1; i >= 0; i--) {
+				executionResults[i].parentNode.removeChild(executionResults[i]);
+			}
 		}
 	}
 }
