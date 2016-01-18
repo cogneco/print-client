@@ -150,12 +150,12 @@ module PrintClient {
 					printClient.localhost = true;
 			}
 		}
-		toggleOutput(event: Event, element: HTMLElement) {
-			var outputElement = <HTMLElement>element.nextElementSibling;
-			if (outputElement.style.display == "none")
-				outputElement.style.display = "block";
+		toggleDetails(event: Event, element: HTMLElement) {
+			var detailsElement = <HTMLElement>(<HTMLElement>element.parentNode).getElementsByTagName("DETAILS")[0];
+			if (detailsElement.style.display == "none")
+				detailsElement.style.display = "block";
 			else
-				outputElement.style.display = "none";
+				detailsElement.style.display = "none";
 
 		}
 	}
