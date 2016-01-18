@@ -1,0 +1,1 @@
+declare function marked(markdownString: string, options?: any, callback?: any): string

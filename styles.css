@@ -9,6 +9,7 @@ body > header {
 	width: 100%;
 	margin: 0;
 	padding: 0.5em;
+    box-sizing: border-box;
 }
 body > header {
 	background-color: #F5F5F5;
@@ -57,7 +58,19 @@ body > main > section > article > main > div > header > span {
 	padding-top: 2px;
 	color: white;
 }
-body > main > section > article > main > p,
+body > main > section > article > main > a.octicon-chevron-right {
+    float: right;
+    width: 30px;
+    height: 55px;
+    font-size: 35px;
+    color: #2E3436;
+    text-align: center;
+    border-radius: 0;
+    padding: 0;
+    padding-top: 10px;
+    cursor: pointer;
+}
+body > main > section > article > main > *,
 body > main > section > article > main > div > header > p {
 	font-size: 14px;
 	margin-bottom: 0;
@@ -67,7 +80,6 @@ body > main > section > article > main > div {
 	margin-top: 0.5em;
 }
 body > main > section > article > main > div > header {
-	cursor: pointer;
 	margin-top: 0;
 }
 body > main > section > article > main > div > header > p {
@@ -97,6 +109,9 @@ body > main > section > article > main > div > details {
 .octicon-server {
 	background-color: #CEA61B;
 }
+.toggle-switch {
+    cursor: pointer;
+}
 a,
 a:link,
 a:visited,
@@ -110,4 +125,18 @@ a:active {
 	padding: 0.5em;
 	background-color: #F3F3F2;
 	border: 1px solid #CCCCCC;
+}
+details > ul {
+    padding-left: 20px;
+}
+code {
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+    height: 100%;
+}
+code::before {
+    content: "\00a0";
+}
+code::after {
+    content: "\00a0";
 }
