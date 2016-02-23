@@ -9,9 +9,10 @@ module PrintClient {
 		private pollInterval: number;
 		private lastEtag: string;
 		private pullrequestIdList: string[] = [];
-		private localhost: boolean = false;
+		private admin: boolean = false;
 		constructor() {
-			Ajax.loadXMLDoc("/print/print-client/am-i-localhost", "GET", this.localhostCallback, "json");
+            if (window.location.pathname.split("/")[4] == "pr")
+                Ajax.loadXMLDoc("/print/print-client/check-privileges", "GET", this.privilegesCallback, "json");
 			this.pollInterval = 10000;
 			Ajax.loadXMLDoc("/print/repolist", "GET", this.loadReposCallback, "json");
 		}
@@ -23,23 +24,6 @@ module PrintClient {
 			returnButton.setAttribute("value", "Return to list");
 			returnButton.setAttribute("onclick", "printClient.changeRepo(\"" + repo + "\")");
 			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
-			if (this.localhost) {
-				var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-				exploreButton.setAttribute("id", "explore-terminal-button");
-				exploreButton.setAttribute("value", "Open in terminal");
-				exploreButton.setAttribute("onclick", "printClient.explorePR(\"terminal\",\"" + repo + "\",\"" + pr + "\")");
-				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-				exploreButton.setAttribute("id", "explore-nautilus-button");
-				exploreButton.setAttribute("value", "Open in nautilus");
-				exploreButton.setAttribute("onclick", "printClient.explorePR(\"nautilus\",\"" + repo + "\",\"" + pr + "\")");
-				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-				exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-				exploreButton.setAttribute("id", "flash-android-button");
-				exploreButton.setAttribute("value", "Flash Android");
-				exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
-				document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-			}
 			var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
 			exploreButton.setAttribute("id", "run-tests-button");
 			exploreButton.setAttribute("value", "Run tests");
@@ -81,7 +65,7 @@ module PrintClient {
 				var repos = <string[]>event.target.response;
 				var currentRepo = window.location.pathname.split("/")[3];
 				var prId: string;
-				if (window.location.pathname.split("/")[4] = "pr")
+				if (window.location.pathname.split("/")[4] == "pr")
 					prId = window.location.pathname.split("/")[5];
 				for (var i = 0; i < repos.length; i++) {
 					var option = HtmlBuilder.createElement("option", repos[i], "value", repos[i]);
@@ -144,10 +128,28 @@ module PrintClient {
 					HtmlBuilder.appendElementById("pr-container", HtmlBuilder.createElement("div", event.target.response.error, "class", "error"));
 			}
 		}
-		localhostCallback(event: any) {
+		privilegesCallback(event: any) {
 			if (event.target.status == 200) {
-				if (event.target.response.localhost == "yes")
-					printClient.localhost = true;
+				if (event.target.response.admin == "yes") {
+                    var repo = window.location.pathname.split("/")[3]
+                    var pr = window.location.pathname.split("/")[5]
+                    var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+                    exploreButton.setAttribute("id", "explore-terminal-button");
+                    exploreButton.setAttribute("value", "Open in terminal");
+                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"terminal\",\"" + repo + "\",\"" + pr + "\")");
+                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+                    exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+                    exploreButton.setAttribute("id", "explore-nautilus-button");
+                    exploreButton.setAttribute("value", "Open in nautilus");
+                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"nautilus\",\"" + repo + "\",\"" + pr + "\")");
+                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+                    exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
+                    exploreButton.setAttribute("id", "flash-android-button");
+                    exploreButton.setAttribute("value", "Flash Android");
+                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
+                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+					printClient.admin = true;
+                }
 			}
 		}
 		toggleDetails(event: Event, element: HTMLElement) {
