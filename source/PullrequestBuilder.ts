@@ -35,15 +35,21 @@ module PrintClient {
 			var title = HtmlBuilder.createElement("h2", pr.title + " #" + String(pr.number), "onclick", "printClient.toggleDetails(event, this)");
             title.setAttribute("class", "toggle-switch");
             main.appendChild(title);
-			if (pr.executionResults.length > 0)
-				main.appendChild(PullrequestBuilder.createStatusIconForList(pr.executionResults, pr.allJobsComplete));
             var detailsButton = HtmlBuilder.createElement("a", "", "href", "/print/print-client/" + pr.repositoryName + "/pr/" + pr.id);
             detailsButton.setAttribute("class", "octicon octicon-chevron-right");
             main.appendChild(detailsButton);
-            var details = HtmlBuilder.createElement("p", "");
-            details.appendChild(HtmlBuilder.createElement("span", PullrequestBuilder.getDateTimeString(new Date(pr.updatedAt)), "style", "font-size:12px;margin-right:5px;"));
-            details.appendChild(HtmlBuilder.createElement("span", pr.user.username + ":" + pr.head.ref));
-			main.appendChild(details);
+			if (pr.executionResults.length > 0)
+				main.appendChild(PullrequestBuilder.createStatusIconForList(pr.executionResults, pr.allJobsComplete));
+			if (pr.labels.length > 0) {
+				var labels = HtmlBuilder.createElement("p", "", "style", "display:inline-block;");
+				pr.labels.forEach((label) => {
+					var labelSpan = HtmlBuilder.createElement("span", label.name, "class", "label");
+					labelSpan.setAttribute("style", "background-color:#" + label.color);
+					labels.appendChild(labelSpan);
+				});
+				main.appendChild(labels);
+			}
+            main.appendChild(HtmlBuilder.createElement("p", "Latest update: " + PullrequestBuilder.getDateTimeString(new Date(pr.updatedAt)) + " " + pr.user.username + ":" + pr.head.ref));
             var description = HtmlBuilder.createElement("details", "", "style", "display:none;");
             description.innerHTML = marked(pr.description);
 			main.appendChild(description);
@@ -52,10 +58,16 @@ module PrintClient {
 		static buildPRBox(pr: PrintApi.Pullrequest) {
 			var main = HtmlBuilder.createElement("main");
 			main.appendChild(HtmlBuilder.createElement("h2", pr.title + " #" + String(pr.number)));
-			var details = HtmlBuilder.createElement("p", "");
-            details.appendChild(HtmlBuilder.createElement("span", PullrequestBuilder.getDateTimeString(new Date(pr.updatedAt)), "style", "font-size:12px;margin-right:5px;"));
-            details.appendChild(HtmlBuilder.createElement("span", pr.user.username));
-			main.appendChild(details);
+			if (pr.labels.length > 0) {
+				var labels = HtmlBuilder.createElement("p", "", "style", "display:inline-block;");
+				pr.labels.forEach((label) => {
+					var labelSpan = HtmlBuilder.createElement("span", label.name, "class", "label");
+					labelSpan.setAttribute("style", "background-color:#" + label.color);
+					labels.appendChild(labelSpan);
+				});
+				main.appendChild(labels);
+			}
+            main.appendChild(HtmlBuilder.createElement("p", "Latest update: " + PullrequestBuilder.getDateTimeString(new Date(pr.updatedAt)) + " " + pr.user.username + ":" + pr.head.ref));
             main.innerHTML = main.innerHTML + marked(pr.description);
 			main.appendChild(HtmlBuilder.createElement("p", "Execution status:"));
 			pr.executionResults.forEach((result) => {

@@ -1,6 +1,7 @@
 /// <reference path="ExecutionResult" />
 /// <reference path="User" />
 /// <reference path="Fork" />
+/// <reference path="Label" />
 
 module PrintClient.PrintApi {
 	export class Pullrequest {
@@ -20,5 +21,6 @@ module PrintClient.PrintApi {
 		base: Fork;
 		executionResults: ExecutionResult[] = [];
 		allJobsComplete: string;
+        labels: Label[];
 	}
 }

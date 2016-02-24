@@ -18,6 +18,7 @@
 		"source/printapi/ExecutionResult.ts",
 		"source/printapi/Fork.ts",
 		"source/printapi/Repository.ts",
-		"source/printapi/User.ts"
+		"source/printapi/User.ts",
+        "source/printapi/Label.ts"
 	]
 }
