@@ -24,21 +24,11 @@ module PrintClient {
 			returnButton.setAttribute("value", "Return to list");
 			returnButton.setAttribute("onclick", "printClient.changeRepo(\"" + repo + "\")");
 			document.getElementsByTagName("header")[0].children[0].appendChild(returnButton);
-			var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-			exploreButton.setAttribute("id", "run-tests-button");
-			exploreButton.setAttribute("value", "Run tests");
-			exploreButton.setAttribute("onclick", "printClient.explorePR(\"runtests\",\"" + repo + "\",\"" + pr + "\")");
-			document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+			printClient.addExploreButton("Run tests", "runtests", repo, pr);
 			Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json");
 			this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + repo + "/pr/" + pr, "GET", this.loadPRCallback, "json", this.lastEtag); }, this.pollInterval);
 		}
 		loadRepoPRs(value: string) {
-			PrintClient.HtmlBuilder.clearElementById("pr-container");
-			HtmlBuilder.removeElementById("return-button");
-			HtmlBuilder.removeElementById("explore-terminal-button");
-			HtmlBuilder.removeElementById("explore-nautilus-button");
-			HtmlBuilder.removeElementById("flash-android-button");
-			HtmlBuilder.removeElementById("run-tests-button");
 			this.pullrequestIdList = [];
 			clearInterval(this.intervalHandle);
 			if (value != "none") {
@@ -46,7 +36,9 @@ module PrintClient {
 				this.intervalHandle = setInterval(() => { Ajax.loadXMLDoc("/print/" + value, "GET", this.loadPRListCallback, "json", this.lastEtag); }, this.pollInterval);
 			}
 		}
-		explorePR(application: string, repo: string, pr: string) {
+		explorePR(event: any, application: string, repo: string, pr: string) {
+			if (event)
+				event.preventDefault();
 			var callback: any = null;
 			if (application == "runtests")
 				callback = this.runTestsCallback;
@@ -131,26 +123,31 @@ module PrintClient {
 		privilegesCallback(event: any) {
 			if (event.target.status == 200) {
 				if (event.target.response.admin == "yes") {
-                    var repo = window.location.pathname.split("/")[3]
-                    var pr = window.location.pathname.split("/")[5]
-                    var exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-                    exploreButton.setAttribute("id", "explore-terminal-button");
-                    exploreButton.setAttribute("value", "Open in terminal");
-                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"terminal\",\"" + repo + "\",\"" + pr + "\")");
-                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-                    exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-                    exploreButton.setAttribute("id", "explore-nautilus-button");
-                    exploreButton.setAttribute("value", "Open in nautilus");
-                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"nautilus\",\"" + repo + "\",\"" + pr + "\")");
-                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
-                    exploreButton = HtmlBuilder.createElement("input", "", "type", "button");
-                    exploreButton.setAttribute("id", "flash-android-button");
-                    exploreButton.setAttribute("value", "Flash Android");
-                    exploreButton.setAttribute("onclick", "printClient.explorePR(\"android\",\"" + repo + "\",\"" + pr + "\")");
-                    document.getElementsByTagName("header")[0].children[0].appendChild(exploreButton);
+                    var repo = window.location.pathname.split("/")[3];
+                    var pr = window.location.pathname.split("/")[5]	;				
+					/*printClient.addExploreButton("Open in terminal", "terminal", repo, pr);
+					printClient.addExploreButton("Open in nautilus", "nautilus", repo, pr);
+					printClient.addExploreButton("Flash Andriod", "android", repo, pr);*/
+					printClient.addExploreButton("Download binaries", "download-binaries", repo, pr, true);
 					printClient.admin = true;
                 }
 			}
+		}
+		addExploreButton(text: string, purpose: string, repo: string, pr:string, download: boolean = false) {
+			var button: HTMLElement;
+			var inputButton = HtmlBuilder.createElement("input", "", "type", "button");
+			inputButton.setAttribute("value", text);
+			if (download) {
+				var url = "/print/explore/" + purpose + "/" + repo + "/" + pr;
+				button = HtmlBuilder.createElement("a", "", "href", url);
+				button.setAttribute("id", purpose + "-button");
+				button.setAttribute("download", "");
+			} else {
+				button = HtmlBuilder.createElement("a", "", "href", "#");
+				button.setAttribute("onclick", "printClient.explorePR(event, '" + purpose + "', '" + repo + "', '" + pr + "')");
+			}
+			button.appendChild(inputButton);
+			document.getElementsByTagName("header")[0].children[0].appendChild(button);
 		}
 		toggleDetails(event: Event, element: HTMLElement) {
 			var detailsElement = <HTMLElement>(<HTMLElement>element.parentNode).getElementsByTagName("DETAILS")[0];
