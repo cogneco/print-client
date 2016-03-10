@@ -124,7 +124,9 @@ module PrintClient {
 		}
 		static createStatusIcon(result: string) {
 			var icon = "octicon-check";
-			if (result != "0")
+			if (result == "999")
+				icon = "octicon-server";
+			else if (result != "0")
 				icon = "octicon-x";
 			return HtmlBuilder.createElement("span", "", "class", "octicon " + icon);
 		}
