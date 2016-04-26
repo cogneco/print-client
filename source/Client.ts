@@ -1,7 +1,7 @@
-/// <reference path="printapi/Pullrequest" />
-/// <reference path="Ajax" />
-/// <reference path="HtmlBuilder" />
-/// <reference path="PullrequestBuilder" />
+/// <reference path="printapi/Pullrequest.ts" />
+/// <reference path="Ajax.ts" />
+/// <reference path="HtmlBuilder.ts" />
+/// <reference path="PullrequestBuilder.ts" />
 
 module PrintClient {
 	export class Client {
@@ -124,7 +124,7 @@ module PrintClient {
 			if (event.target.status == 200) {
 				if (event.target.response.admin == "yes") {
                     var repo = window.location.pathname.split("/")[3];
-                    var pr = window.location.pathname.split("/")[5]	;				
+                    var pr = window.location.pathname.split("/")[5]	;
 					/*printClient.addExploreButton("Open in terminal", "terminal", repo, pr);
 					printClient.addExploreButton("Open in nautilus", "nautilus", repo, pr);
 					printClient.addExploreButton("Flash Andriod", "android", repo, pr);*/
