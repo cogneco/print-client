@@ -1,7 +1,7 @@
-/// <reference path="ExecutionResult" />
-/// <reference path="User" />
-/// <reference path="Fork" />
-/// <reference path="Label" />
+/// <reference path="ExecutionResult.ts" />
+/// <reference path="User.ts" />
+/// <reference path="Fork.ts" />
+/// <reference path="Label.ts" />
 
 module PrintClient.PrintApi {
 	export class Pullrequest {

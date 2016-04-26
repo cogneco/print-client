@@ -1,5 +1,5 @@
-/// <reference path="User" />
-/// <reference path="Repository" />
+/// <reference path="User.ts" />
+/// <reference path="Repository.ts" />
 
 module PrintClient.PrintApi {
 	export class Fork {
