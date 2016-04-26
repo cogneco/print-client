@@ -1,4 +1,4 @@
-/// <reference path="User" />
+/// <reference path="User.ts" />
 
 module PrintClient.PrintApi {
 	export class Repository {

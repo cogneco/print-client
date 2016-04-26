@@ -1,5 +1,5 @@
-/// <reference path="HtmlBuilder" />
-/// <reference path="printapi/Pullrequest" />
+/// <reference path="HtmlBuilder.ts" />
+/// <reference path="printapi/Pullrequest.ts" />
 /// <reference path="../markdown.d.ts" />
 
 module PrintClient {
